@@ -1,0 +1,78 @@
+<div class="container">
+
+  <h1> Enter Quiz Details </h1>
+
+  <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+
+    <p>
+      <label for="name">Quiz Name:</label>
+      <input type="text" id="name" name="name" formControlName="name" class="form-control"><br>
+      <small class="name-instructions-validation" *ngIf="name.invalid && name.touched">Name is required</small>
+    </p>
+    <p>
+      <label for="instructions">instructions:</label>
+      <input type="text" id="instructions" name="instructions" formControlName="instructions" class="form-control"> <br>
+      <small class="name-instructions-validation" *ngIf="instructions.touched && instructions.invalid">Instructions are
+        required</small>
+    </p>
+
+    <table class="table table-bordered" formArrayName="questions">
+      <tr>
+        <th colspan="2">Add Multiple questions:</th> <br>
+      </tr>
+      <table class="table-table-bordered-2" *ngFor="let ques of getQuestions().controls; let i=index "
+        [formGroupName]="i">
+        <tr>
+          <td>
+            <label for="question">question {{i+1}}:</label>
+            <input type="text" formControlName="question" class="form-control"> <br>
+            <small class="question-validation" *ngIf="question.invalid && question.touched">Question is required</small>
+            <br />
+          </td>
+        </tr>
+        <tr formArrayName="answers">
+          <div *ngFor="let ans of getAnswers(ques).controls; let j=index" [formGroupName]="j">
+            <td>
+              option {{j+1}} :
+              <input type="text" formControlName="option" class="form-control">
+            </td>
+          </div>
+        </tr>
+        <tr>
+          <td>
+            answer(between 0 and 3):
+            <input type="number" min="0" max="3" formControlName="answer" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            explanation:
+            <input type="text" formControlName="explanation" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button type="button" (click)="removeQuestion(i)" class="btn btn-danger" *ngIf="i!=0">Remove</button>
+          </td>
+        </tr>
+      </table>
+      <tr>
+        <td>
+          <button type="button" (click)="addQuestion()" class="btn btn-primary">Add More Questions</button>
+        </td>
+      </tr>
+    </table>
+    <button type="submit" [disabled]="quizForm.invalid" class="btn btn-success">Submit</button>
+
+
+
+    <div class="row" *ngIf="showMsg">
+      <strong>Quiz Submitted Successfully</strong><br>
+      <button mat-button color="secondary" class="btn btn-primary">
+        <a routerLink="/{{response._id}}" class="btn btn-primary">Go to your Quiz</a>
+      </button>
+    </div>
+  </form>
+
+  <br />
+</div>
